@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HydroPower System Flow</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #101025;
+  color: white;
+  font-family: Arial;
+  text-align: center;
+  padding: 20px;
+}
+h1 { color: #00e5ff; }
+.step {
+  background: #20203d;
+  border: 1px solid #00bcd4;
+  border-radius: 12px;
+  padding: 18px;
+  margin: 12px auto;
+  max-width: 450px;
+}
+.arrow {
+  color: #00e5ff;
+  font-size: 28px;
+}
+button {
+  background: #00bcd4;
+  color: #101025;
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 22px;
+  font-weight: bold;
+}
+#description { color: #c8e9ef; }
+a { color: #00e5ff; }
+</style>
+</head>
+<body>
+
+<h1>HydroPower System Flow</h1>
+<p>Explore how water energy becomes electrical energy.</p>
+
+<div class="step">
+  <h2>💧 1. Water Flow</h2>
+  <p>Water moves towards the turbine.</p>
+</div>
+<div class="arrow">↓</div>
+
+<div class="step">
+  <h2>⚙️ 2. Metal Turbine</h2>
+  <p>Moving water rotates the turbine.</p>
+</div>
+<div class="arrow">↓</div>
+
+<div class="step">
+  <h2>🔄 3. Belt Drive</h2>
+  <p>The belt transfers rotation to the dynamo.</p>
+</div>
+<div class="arrow">↓</div>
+
+<div class="step">
+  <h2>⚡ 4. 12V-Rated Dynamo</h2>
+  <p>The rotating dynamo generates electricity.</p>
+</div>
+<div class="arrow">↓</div>
+
+<div class="step">
+  <h2>🔋 5. Electrical Energy</h2>
+  <p>Generated electricity can power a suitable load.</p>
+</div>
+
+<div class="step">
+  <h2>Learn the Process</h2>
+  <p id="description">Tap the button to explore the working principle.</p>
+  <button onclick="nextStep()">Next Step</button>
+</div>
+
+<p><a href="index.html">Back to Home</a></p>
+
+<script>
+const details = [
+"Water flow provides the energy needed to rotate the turbine.",
+"The metal turbine converts water movement into rotational motion.",
+"The belt transfers rotational motion from the turbine to the dynamo.",
+"The dynamo converts mechanical energy into electrical energy.",
+"Electrical energy can be supplied to a suitable electrical load."
+];
+
+let current = 0;
+
+function nextStep() {
+  document.getElementById("description").textContent =
+    details[current];
+  current = (current + 1) % details.length;
+}
+</script>
+
+</body>
+</html>
