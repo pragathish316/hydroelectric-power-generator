@@ -4,6 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HydroPower Live Simulator</title>
+    .water-system {
+    background: #111c35;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.water-pipe {
+    height: 18px;
+    background: #173b61;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 20px auto;
+    max-width: 500px;
+}
+
+.water-stream {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #168cff, #35d9ff);
+    transition: width 0.3s;
+    box-shadow: 0 0 15px #35d9ff;
+}
+
+.water-label {
+    color: #35d9ff;
+    font-weight: bold;
+}
 
     <style>
         body {
@@ -123,6 +152,15 @@
            min="0" max="100" value="50">
 
     <div class="turbine" id="turbine">⚙️</div>
+    <div class="water-system">
+    <h3>💧 Water Flow Visualization</h3>
+    <div class="water-pipe">
+        <div class="water-stream" id="waterStream"></div>
+    </div>
+    <p class="water-label" id="waterStatus">
+        Water Flow: 50%
+    </p>
+</div>
 
     <p class="status" id="status">
         Simulation Stopped
@@ -239,6 +277,11 @@ let energy = 0;
 const flowSlider = document.getElementById("flow");
 
 function updateReadings() {
+    document.getElementById("waterStream").style.width =
+    flow + "%";
+
+document.getElementById("waterStatus").textContent =
+    "Water Flow: " + flow + "%";
 
     let flow = Number(flowSlider.value);
 
