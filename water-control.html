@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HydroPower Water Control</title>
+<style>
+body {
+  background:#0b1425;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+  padding:25px;
+}
+.card {
+  background:#192a42;
+  max-width:500px;
+  margin:25px auto;
+  padding:25px;
+  border-radius:15px;
+}
+h1 {color:#38d9ff;}
+.value {
+  color:#38d9ff;
+  font-size:30px;
+  margin:15px;
+}
+input {width:90%;accent-color:#38d9ff;}
+button {
+  padding:12px 25px;
+  background:#087fba;
+  color:white;
+  border:0;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🌊 Water Flow Control</h1>
+<p>Hydroelectric Generator Simulator</p>
+
+<div class="card">
+  <h2>Adjust Water Flow</h2>
+
+  <input type="range" id="flow"
+  min="0" max="100" value="50">
+
+  <div class="value">
+    <span id="flowValue">50</span>%
+  </div>
+
+  <h3>Turbine Speed</h3>
+  <div class="value" id="rpm">600 RPM</div>
+
+  <h3>Estimated Voltage</h3>
+  <div class="value" id="voltage">6 V</div>
+
+  <h3>System Status</h3>
+  <p id="status">Running simulation</p>
+
+  <button onclick="resetControl()">Reset</button>
+</div>
+
+<script>
+const slider = document.getElementById("flow");
+
+function updateControl() {
+  const flow = Number(slider.value);
+  const rpm = flow * 12;
+  const voltage = flow * 0.12;
+
+  document.getElementById("flowValue").textContent = flow;
+  document.getElementById("rpm").textContent = rpm + " RPM";
+  document.getElementById("voltage").textContent =
+    voltage.toFixed(2) + " V";
+
+  document.getElementById("status").textContent =
+    flow === 0 ? "No simulated water flow" :
+    flow < 30 ? "Low water flow" :
+    flow < 70 ? "Medium water flow" :
+    "High water flow";
+}
+
+function resetControl() {
+  slider.value = 50;
+  updateControl();
+}
+
+slider.addEventListener("input", updateControl);
+updateControl();
+</script>
+
+</body>
+</html>
