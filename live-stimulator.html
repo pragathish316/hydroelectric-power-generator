@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HydroPower Live Simulator</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 25px;
+            background: #101426;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            color: #35d9ff;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #b5c9e8;
+        }
+
+        .panel {
+            max-width: 850px;
+            margin: 25px auto;
+            padding: 22px;
+            background: #202b45;
+            border-radius: 15px;
+        }
+
+        .readings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+            gap: 15px;
+        }
+
+        .reading {
+            background: #111c35;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .reading h3 {
+            color: #35d9ff;
+            font-size: 15px;
+        }
+
+        .value {
+            font-size: 27px;
+            font-weight: bold;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #35d9ff;
+        }
+
+        button {
+            padding: 12px 20px;
+            margin: 7px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .start { background: #16c784; }
+        .pause { background: #ffc857; }
+        .reset { background: #ff647c; }
+
+        .turbine {
+            font-size: 65px;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .spin {
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            to { transform: rotate(360deg); }
+        }
+
+        .status {
+            text-align: center;
+            color: #35d9ff;
+            font-weight: bold;
+        }
+
+        .note {
+            color: #bdcce3;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        a { color: #35d9ff; }
+    </style>
+</head>
+
+<body>
+
+<h1>⚡ HydroPower Live Simulator</h1>
+<p class="subtitle">
+    Interactive Hydroelectric Power Generation Model
+</p>
+
+<div class="panel">
+
+    <h2>Water Flow Control</h2>
+
+    <label>
+        Water Flow:
+        <strong id="flowLabel">50%</strong>
+    </label>
+
+    <input type="range" id="flow"
+           min="0" max="100" value="50">
+
+    <div class="turbine" id="turbine">⚙️</div>
+
+    <p class="status" id="status">
+        Simulation Stopped
+    </p>
+
+    <div style="text-align:center">
+        <button class="start" onclick="startSimulation()">
+            ▶ Start
+        </button>
+
+        <button class="pause" onclick="pauseSimulation()">
+            ⏸ Pause
+        </button>
+
+        <button class="reset" onclick="resetSimulation()">
+            ↻ Reset
+        </button>
+    </div>
+
+</div>
+
+<div class="panel">
+
+    <h2>Live Simulation Readings</h2>
+
+    <div class="readings">
+
+        <div class="reading">
+            <h3>Water Flow</h3>
+            <div class="value" id="flowValue">50%</div>
+        </div>
+
+        <div class="reading">
+            <h3>Turbine Speed</h3>
+            <div class="value" id="rpm">600</div>
+            <small>RPM</small>
+        </div>
+
+        <div class="reading">
+            <h3>Voltage</h3>
+            <div class="value" id="voltage">6.0</div>
+            <small>Volts</small>
+        </div>
+
+        <div class="reading">
+            <h3>Current</h3>
+            <div class="value" id="current">0.25</div>
+            <small>Amperes</small>
+        </div>
+
+        <div class="reading">
+            <h3>Power</h3>
+            <div class="value" id="power">1.50</div>
+            <small>Watts</small>
+        </div>
+
+        <div class="reading">
+            <h3>Energy Generated</h3>
+            <div class="value" id="energy">0.000</div>
+            <small>Watt-hours</small>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="panel">
+    <h2>Working Principle</h2>
+
+    <p>
+        Water flow rotates the turbine. The turbine drives
+        the dynamo, which converts mechanical energy into
+        electrical energy.
+    </p>
+
+    <p>
+        Electrical Power = Voltage × Current
+    </p>
+
+    <p>
+        Electrical Energy = Power × Time
+    </p>
+</div>
+
+<div class="panel">
+    <h2>Simulation Information</h2>
+
+    <p class="note">
+        This is an educational software simulation.
+        The readings are calculated using illustrative
+        assumptions and are not actual dynamo measurements.
+        Actual generator output depends on RPM, load and
+        generator characteristics.
+    </p>
+
+    <p><a href="dashboard.html">← Back to Dashboard</a></p>
+</div>
+
+<script>
+
+let running = false;
+let timer = null;
+let energy = 0;
+
+const flowSlider = document.getElementById("flow");
+
+function updateReadings() {
+
+    let flow = Number(flowSlider.value);
+
+    // Illustrative simulation model
+    let rpm = flow * 12;
+    let voltage = flow * 0.12;
+    let current = voltage / 24;
+    let power = voltage * current;
+
+    document.getElementById("flowLabel").textContent =
+        flow + "%";
+
+    document.getElementById("flowValue").textContent =
+        flow + "%";
+
+    document.getElementById("rpm").textContent =
+        rpm.toFixed(0);
+
+    document.getElementById("voltage").textContent =
+        voltage.toFixed(2);
+
+    document.getElementById("current").textContent =
+        current.toFixed(2);
+
+    document.getElementById("power").textContent =
+        power.toFixed(2);
+
+    document.getElementById("energy").textContent =
+        energy.toFixed(4);
+
+    document.getElementById("turbine").style.animationDuration =
+        (flow > 0 ? Math.max(0.15, 2 - flow / 60) : 2) + "s";
+}
+
+function startSimulation() {
+
+    if (running) return;
+
+    running = true;
+
+    document.getElementById("status").textContent =
+        "Simulation Running";
+
+    document.getElementById("turbine").classList.add("spin");
+
+    timer = setInterval(function() {
+
+        let flow = Number(flowSlider.value);
+        let voltage = flow * 0.12;
+        let current = voltage / 24;
+        let power = voltage * current;
+
+        // Accumulate simulated energy every second
+        energy += power / 3600;
+
+        updateReadings();
+
+    }, 1000);
+}
+
+function pauseSimulation() {
+
+    running = false;
+    clearInterval(timer);
+
+    document.getElementById("status").textContent =
+        "Simulation Paused";
+
+    document.getElementById("turbine").classList.remove("spin");
+}
+
+function resetSimulation() {
+
+    pauseSimulation();
+
+    energy = 0;
+    flowSlider.value = 0;
+
+    document.getElementById("status").textContent =
+        "Simulation Stopped";
+
+    updateReadings();
+}
+
+flowSlider.addEventListener("input", updateReadings);
+
+updateReadings();
+
+</script>
+
+</body>
+</html>
