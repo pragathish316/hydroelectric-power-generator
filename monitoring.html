@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Energy Monitoring Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    padding: 20px;
+    background: #101827;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+}
+h1 { color: #38d9ff; }
+.container {
+    max-width: 850px;
+    margin: auto;
+}
+.card {
+    background: #1c2b40;
+    padding: 22px;
+    margin: 18px 0;
+    border-radius: 15px;
+}
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+}
+.value {
+    font-size: 28px;
+    color: #38d9ff;
+    font-weight: bold;
+}
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.start { background: #00c781; color: white; }
+.stop { background: #ef5350; color: white; }
+.bar {
+    background: #263c58;
+    height: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.fill {
+    background: #38d9ff;
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s;
+}
+@media(max-width:500px) {
+    .stats { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⚡ Energy Monitoring Dashboard</h1>
+<p>Hydroelectric Power Generator</p>
+
+<div class="card">
+<h2>Generator Status</h2>
+<h3 id="status">Stopped</h3>
+
+<button class="start" onclick="startMonitoring()">
+Start Monitoring
+</button>
+
+<button class="stop" onclick="stopMonitoring()">
+Stop Monitoring
+</button>
+</div>
+
+<div class="card">
+<h2>Live Readings (Simulation)</h2>
+
+<div class="stats">
+
+<div>
+<p>Voltage</p>
+<div class="value" id="voltage">0 V</div>
+</div>
+
+<div>
+<p>Current</p>
+<div class="value" id="current">0 A</div>
+</div>
+
+<div>
+<p>Power</p>
+<div class="value" id="power">0 W</div>
+</div>
+
+<div>
+<p>Energy</p>
+<div class="value" id="energy">0 Wh</div>
+</div>
+
+</div>
+</div>
+
+<div class="card">
+<h2>Power Level Graph</h2>
+<div class="bar">
+<div class="fill" id="powerBar"></div>
+</div>
+<p>Power output level</p>
+</div>
+
+<div class="card">
+<h2>Project Details</h2>
+<p>Generator: 12V Dynamo</p>
+<p>Turbine: Metal Turbine</p>
+<p>Connection: Belt Drive</p>
+<p>Water Source: Water Pump</p>
+</div>
+
+<p>Hydroelectric Power Generator Project</p>
+
+</div>
+
+<script>
+
+let timer = null;
+let totalEnergy = 0;
+
+function startMonitoring() {
+
+    if (timer !== null) return;
+
+    document.getElementById("status").innerText =
+        "Monitoring Active";
+
+    timer = setInterval(function() {
+
+        let voltage = 9 + Math.random() * 3;
+        let current = 0.2 + Math.random() * 0.3;
+
+        let power = voltage * current;
+
+        totalEnergy += power / 3600;
+
+        document.getElementById("voltage").innerText =
+            voltage.toFixed(2) + " V";
+
+        document.getElementById("current").innerText =
+            current.toFixed(2) + " A";
+
+        document.getElementById("power").innerText =
+            power.toFixed(2) + " W";
+
+        document.getElementById("energy").innerText =
+            totalEnergy.toFixed(4) + " Wh";
+
+        document.getElementById("powerBar").style.width =
+            Math.min(power / 5 * 100, 100) + "%";
+
+    }, 1000);
+}
+
+function stopMonitoring() {
+
+    clearInterval(timer);
+    timer = null;
+
+    document.getElementById("status").innerText =
+        "Monitoring Stopped";
+
+    document.getElementById("voltage").innerText = "0 V";
+    document.getElementById("current").innerText = "0 A";
+    document.getElementById("power").innerText = "0 W";
+    document.getElementById("powerBar").style.width = "0%";
+}
+
+</script>
+
+</body>
+</html>
