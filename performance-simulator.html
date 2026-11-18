@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HydroPower Performance Simulator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #0b1020;
+  color: white;
+  font-family: Arial;
+  padding: 20px;
+}
+h1, h2 { color: #00e5ff; }
+.card {
+  background: #192641;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+input { width: 100%; }
+.value {
+  color: #00e5ff;
+  font-size: 25px;
+  font-weight: bold;
+}
+button {
+  background: #00c9e8;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: bold;
+}
+a { color: #00e5ff; }
+</style>
+</head>
+<body>
+
+<h1>⚡ Performance Simulator</h1>
+<p>Explore simulated hydroelectric performance.</p>
+
+<div class="card">
+  <h2>Water Flow Control</h2>
+  <p>Flow level: <span id="flow" class="value">50</span>%</p>
+  <input type="range" id="flowSlider"
+         min="0" max="100" value="50">
+</div>
+
+<div class="card">
+  <h2>Simulated Performance</h2>
+  <p>Turbine Speed</p>
+  <p class="value"><span id="rpm">600</span> RPM</p>
+
+  <p>Voltage</p>
+  <p class="value"><span id="voltage">6.0</span> V</p>
+
+  <p>Current</p>
+  <p class="value"><span id="current">0.50</span> A</p>
+
+  <p>Electrical Power</p>
+  <p class="value"><span id="power">3.00</span> W</p>
+</div>
+
+<div class="card">
+  <h2>Energy Explanation</h2>
+  <p>Electrical Power = Voltage × Current</p>
+  <p id="message">The simulator is running.</p>
+  <button onclick="resetSimulation()">Reset Simulation</button>
+</div>
+
+<p><a href="dashboard.html">Back to Dashboard</a></p>
+
+<p style="color:#aab8cc;font-size:12px">
+All values are illustrative software assumptions,
+not real dynamo measurements. Actual output depends
+on turbine speed, dynamo characteristics and load.
+</p>
+
+<script>
+const slider = document.getElementById("flowSlider");
+
+function updateSimulation() {
+  let flow = Number(slider.value);
+
+  let rpm = flow * 12;
+  let voltage = flow * 0.12;
+  let current = 0.50;
+  let power = voltage * current;
+
+  document.getElementById("flow").textContent = flow;
+  document.getElementById("rpm").textContent = rpm;
+  document.getElementById("voltage").textContent =
+    voltage.toFixed(1);
+  document.getElementById("current").textContent =
+    current.toFixed(2);
+  document.getElementById("power").textContent =
+    power.toFixed(2);
+
+  document.getElementById("message").textContent =
+    flow === 0
+    ? "No simulated water flow."
+    : "Increasing flow increases the estimated output in this model.";
+}
+
+function resetSimulation() {
+  slider.value = 50;
+  updateSimulation();
+}
+
+slider.addEventListener("input", updateSimulation);
+updateSimulation();
+</script>
+
+</body>
+</html>
