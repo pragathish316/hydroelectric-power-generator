@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Energy Calculator</title>
+<style>
+body {
+    background: #101827;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding: 30px;
+}
+.panel {
+    background: #1c2b40;
+    padding: 25px;
+    border-radius: 15px;
+    max-width: 450px;
+    margin: 30px auto;
+}
+input {
+    padding: 12px;
+    margin: 10px;
+    width: 80%;
+}
+button {
+    padding: 12px 25px;
+    background: #00c781;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+h1 { color: #38d9ff; }
+</style>
+</head>
+<body>
+
+<h1>Hydroelectric Power Generator</h1>
+
+<div class="panel">
+<h2>Energy Generation Calculator</h2>
+
+<input type="number" id="power" placeholder="Power in Watts" min="0" step="any">
+
+<input type="number" id="time" placeholder="Time in Hours" min="0" step="any">
+
+<br><br>
+
+<button onclick="calculate()">Calculate Energy</button>
+
+<h3 id="result">Energy: 0 Wh</h3>
+</div>
+
+<script>
+function calculate() {
+    let p = document.getElementById("power").value;
+    let t = document.getElementById("time").value;
+
+    if (p === "" || t === "" ||
+        !Number.isFinite(Number(p)) ||
+        !Number.isFinite(Number(t)) ||
+        Number(p) < 0 || Number(t) < 0) {
+        document.getElementById("result").innerText =
+            "Enter valid values";
+        return;
+    }
+
+    let energy = Number(p) * Number(t);
+
+    document.getElementById("result").innerText =
+        "Generated Energy: " + energy.toFixed(2) + " Wh";
+}
+</script>
+
+</body>
+</html>
