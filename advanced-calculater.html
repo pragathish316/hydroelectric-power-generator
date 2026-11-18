@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HydroPower Electrical Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #0b1020;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+h1, h2 { color: #00e5ff; }
+.card {
+  background: #192641;
+  padding: 20px;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 15px;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+button {
+  background: #00c9e8;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 8px;
+  font-weight: bold;
+}
+.result {
+  color: #00e5ff;
+  font-size: 22px;
+}
+a { color: #00e5ff; }
+</style>
+</head>
+<body>
+
+<h1>⚡ Electrical Calculator</h1>
+<p>Calculate power and electrical energy.</p>
+
+<div class="card">
+  <label>Voltage (V)</label>
+  <input type="number" id="voltage" value="12" min="0" step="any">
+
+  <label>Current (A)</label>
+  <input type="number" id="current" value="0.5" min="0" step="any">
+
+  <label>Operating Time (hours)</label>
+  <input type="number" id="time" value="2" min="0" step="any">
+
+  <button onclick="calculate()">Calculate</button>
+</div>
+
+<div class="card">
+  <h2>Calculation Results</h2>
+  <p>Power = Voltage × Current</p>
+  <p class="result" id="power">6 W</p>
+
+  <p>Energy = Power × Time</p>
+  <p class="result" id="energy">12 Wh</p>
+
+  <p id="joules">Energy in Joules: 43200 J</p>
+</div>
+
+<div class="card">
+  <h2>Engineering Formulas</h2>
+  <p>P = V × I</p>
+  <p>E = P × t</p>
+  <p>1 Wh = 3600 Joules</p>
+</div>
+
+<p style="color:#aab8cc;font-size:12px">
+Enter actual measured voltage and current for real results.
+Default values are examples, not hardware measurements.
+</p>
+
+<p><a href="dashboard.html">Back to Dashboard</a></p>
+
+<script>
+function calculate() {
+  const v = Number(document.getElementById("voltage").value);
+  const i = Number(document.getElementById("current").value);
+  const t = Number(document.getElementById("time").value);
+
+  if (!Number.isFinite(v) || !Number.isFinite(i) ||
+      !Number.isFinite(t) || v < 0 || i < 0 || t < 0 ||
+      document.getElementById("voltage").value === "" ||
+      document.getElementById("current").value === "" ||
+      document.getElementById("time").value === "") {
+    alert("Please enter valid non-negative values.");
+    return;
+  }
+
+  const power = v * i;
+  const energy = power * t;
+  const joules = energy * 3600;
+
+  document.getElementById("power").textContent =
+    power.toFixed(2) + " W";
+  document.getElementById("energy").textContent =
+    energy.toFixed(2) + " Wh";
+  document.getElementById("joules").textContent =
+    "Energy in Joules: " + joules.toFixed(2) + " J";
+}
+calculate();
+</script>
+
+</body>
+</html>
