@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HydroPower Data Storage</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #0b1020;
+  color: white;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+h1, h2 { color: #00e5ff; }
+.card {
+  background: #192641;
+  padding: 18px;
+  border-radius: 12px;
+  margin: 15px 0;
+}
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0 15px;
+  box-sizing: border-box;
+}
+button {
+  padding: 11px 16px;
+  border: 0;
+  border-radius: 7px;
+  margin: 4px;
+  background: #00c9e8;
+  font-weight: bold;
+}
+.record {
+  border-bottom: 1px solid #52627c;
+  padding: 12px 0;
+}
+a { color: #00e5ff; }
+.small { color: #b7c6d9; font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1>📁 Project Data Storage</h1>
+<p>Save and review electrical test calculations.</p>
+
+<div class="card">
+  <h2>New Record</h2>
+
+  <label>Test Name</label>
+  <input id="testName" placeholder="Example: Test 1">
+
+  <label>Voltage (V)</label>
+  <input id="voltage" type="number" min="0" step="any">
+
+  <label>Current (A)</label>
+  <input id="current" type="number" min="0" step="any">
+
+  <label>Operating Time (hours)</label>
+  <input id="time" type="number" min="0" step="any">
+
+  <button onclick="saveRecord()">Save Record</button>
+</div>
+
+<div class="card">
+  <h2>Saved Records</h2>
+  <div id="records"></div>
+  <button onclick="clearRecords()">Clear All Records</button>
+</div>
+
+<p class="small">
+Records are stored only in this browser on this device.
+Use actual measured readings for hardware tests.
+</p>
+
+<p><a href="dashboard.html">Back to Dashboard</a></p>
+
+<script>
+function getRecords() {
+  try {
+    return JSON.parse(localStorage.getItem("hydroRecords") || "[]");
+  } catch {
+    return [];
+  }
+}
+
+function saveRecord() {
+  const name = document.getElementById("testName").value.trim();
+  const vText = document.getElementById("voltage").value;
+  const iText = document.getElementById("current").value;
+  const tText = document.getElementById("time").value;
+
+  const v = Number(vText);
+  const i = Number(iText);
+  const t = Number(tText);
+
+  if (!name || vText === "" || iText === "" || tText === "" ||
+      !Number.isFinite(v) || !Number.isFinite(i) ||
+      !Number.isFinite(t) || v < 0 || i < 0 || t < 0) {
+    alert("Enter a test name and valid non-negative readings.");
+    return;
+  }
+
+  const power = v * i;
+  const energy = power * t;
+
+  const records = getRecords();
+  records.push({
+    name, voltage: v, current: i, time: t,
+    power, energy,
+    date: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("hydroRecords", JSON.stringify(records));
+
+  document.getElementById("testName").value = "";
+  document.getElementById("voltage").value = "";
+  document.getElementById("current").value = "";
+  document.getElementById("time").value = "";
+
+  showRecords();
+}
+
+function showRecords() {
+  const records = getRecords();
+  const container = document.getElementById("records");
+
+  if (records.length === 0) {
+    container.textContent = "No records saved yet.";
+    return;
+  }
+
+  container.innerHTML = records.map((r, index) => `
+    <div class="record">
+      <h3>${escapeHTML(r.name)}</h3>
+      <p>Voltage: ${r.voltage} V | Current: ${r.current} A</p>
+      <p>Power: ${r.power.toFixed(2)} W</p>
+      <p>Energy: ${r.energy.toFixed(2)} Wh</p>
+      <p class="small">${escapeHTML(r.date)}</p>
+      <button onclick="deleteRecord(${index})">Delete</button>
+    </div>
+  `).join("");
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;",
+    '"': "&quot;", "'": "&#39;"
+  })[c]);
+}
+
+function deleteRecord(index) {
+  const records = getRecords();
+  records.splice(index, 1);
+  localStorage.setItem("hydroRecords", JSON.stringify(records));
+  showRecords();
+}
+
+function clearRecords() {
+  if (confirm("Delete all saved records?")) {
+    localStorage.removeItem("hydroRecords");
+    showRecords();
+  }
+}
+
+showRecords();
+</script>
+
+</body>
+</html>
