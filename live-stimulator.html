@@ -165,6 +165,14 @@
     <p class="status" id="status">
         Simulation Stopped
     </p>
+    <div class="reading">
+    <h3>Generator Condition</h3>
+    <div class="value" id="generatorStatus"
+         style="font-size:20px;color:#ffc857;">
+        STOPPED
+    </div>
+    <p id="generatorMessage">Start the simulation to begin.</p>
+</div>
 
     <div style="text-align:center">
         <button class="start" onclick="startSimulation()">
@@ -314,6 +322,29 @@ document.getElementById("waterStatus").textContent =
 
     document.getElementById("turbine").style.animationDuration =
         (flow > 0 ? Math.max(0.15, 2 - flow / 60) : 2) + "s";
+    let condition = "STOPPED";
+let message = "Simulation is not running.";
+let statusColor = "#ff647c";
+
+if (running && flow > 0) {
+    if (flow >= 80) {
+        condition = "HIGH FLOW";
+        message = "High water flow in the simulation.";
+        statusColor = "#ffc857";
+    } else {
+        condition = "GENERATING";
+        message = "Simulated electricity generation is active.";
+        statusColor = "#16c784";
+    }
+} else if (running && flow === 0) {
+    condition = "NO WATER";
+    message = "Increase water flow to simulate generation.";
+    statusColor = "#ffc857";
+}
+
+document.getElementById("generatorStatus").textContent = condition;
+document.getElementById("generatorStatus").style.color = statusColor;
+document.getElementById("generatorMessage").textContent = message;
 }
 
 function startSimulation() {
@@ -321,6 +352,7 @@ function startSimulation() {
     if (running) return;
 
     running = true;
+    updateReading();
 
     document.getElementById("status").textContent =
         "Simulation Running";
@@ -345,6 +377,7 @@ function startSimulation() {
 function pauseSimulation() {
 
     running = false;
+    updateReading();
     clearInterval(timer);
 
     document.getElementById("status").textContent =
