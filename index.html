@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hydroelectric Power Generator</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #101827;
+    color: white;
+    text-align: center;
+}
+
+header {
+    background: #172b46;
+    padding: 25px;
+}
+
+h1 {
+    color: #38d9ff;
+}
+
+.container {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+.panel {
+    background: #1c2b40;
+    padding: 25px;
+    margin: 20px 0;
+    border-radius: 15px;
+}
+
+.water {
+    font-size: 65px;
+    animation: flow 1s infinite alternate;
+}
+
+.turbine {
+    font-size: 75px;
+    display: inline-block;
+}
+
+.rotate {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes flow {
+    from { transform: translateY(-5px); }
+    to { transform: translateY(5px); }
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.stat {
+    background: #263c58;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.value {
+    color: #38d9ff;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+button {
+    padding: 13px 30px;
+    margin: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.start {
+    background: #00c781;
+    color: white;
+}
+
+.stop {
+    background: #ef5350;
+    color: white;
+}
+
+footer {
+    padding: 20px;
+    color: #9aafc9;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚡ Hydroelectric Power Generator</h1>
+    <p>Smart Renewable Energy Simulation Dashboard</p>
+</header>
+
+<div class="container">
+
+    <div class="panel">
+        <h2>Working Simulation</h2>
+
+        <div class="water">💧 💧 💧</div>
+        <p>Water Flow</p>
+
+        <div class="turbine" id="turbine">⚙️</div>
+        <p>Metal Turbine</p>
+
+        <p>⚡ Dynamo Generator (12V Rated)</p>
+
+        <h3 id="status">System Stopped</h3>
+
+        <button class="start" onclick="startSystem()">
+            Start Generator
+        </button>
+
+        <button class="stop" onclick="stopSystem()">
+            Stop Generator
+        </button>
+    </div>
+
+    <div class="panel">
+        <h2>Generator Monitoring</h2>
+
+        <div class="stats">
+
+            <div class="stat">
+                <p>Voltage</p>
+                <div class="value" id="voltage">0 V</div>
+            </div>
+
+            <div class="stat">
+                <p>Turbine Speed</p>
+                <div class="value" id="rpm">0 RPM</div>
+            </div>
+
+            <div class="stat">
+                <p>Water Flow</p>
+                <div class="value" id="flow">0 L/min</div>
+            </div>
+
+            <div class="stat">
+                <p>Power</p>
+                <div class="value" id="power">0 W</div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2>Project Information</h2>
+        <p>Generator: 12V Dynamo</p>
+        <p>Turbine: Metal Turbine</p>
+        <p>Connection: Belt Drive</p>
+        <p>Water Source: Water Pump</p>
+        <p>Energy Conversion: Mechanical Energy to Electrical Energy</p>
+    </div>
+
+</div>
+
+<footer>
+    <p>Hydroelectric Power Generator | Student Project</p>
+</footer>
+
+<script>
+
+let running = false;
+let timer;
+
+function startSystem() {
+
+    if (running) return;
+
+    running = true;
+
+    document.getElementById("status").innerText =
+        "Generator Running";
+
+    document.getElementById("turbine")
+        .classList.add("rotate");
+
+    timer = setInterval(function() {
+
+        document.getElementById("voltage").innerText =
+            (Math.random() * 3 + 8).toFixed(2) + " V";
+
+        document.getElementById("rpm").innerText =
+            Math.floor(Math.random() * 200 + 500) + " RPM";
+
+        document.getElementById("flow").innerText =
+            Math.floor(Math.random() * 10 + 20) + " L/min";
+
+        document.getElementById("power").innerText =
+            (Math.random() * 5 + 5).toFixed(2) + " W";
+
+    }, 1000);
+}
+
+function stopSystem() {
+
+    running = false;
+
+    clearInterval(timer);
+
+    document.getElementById("status").innerText =
+        "System Stopped";
+
+    document.getElementById("turbine")
+        .classList.remove("rotate");
+
+    document.getElementById("voltage").innerText = "0 V";
+    document.getElementById("rpm").innerText = "0 RPM";
+    document.getElementById("flow").innerText = "0 L/min";
+    document.getElementById("power").innerText = "0 W";
+}
+
+</script>
+
+</body>
+</html>
