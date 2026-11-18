@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HydroPower - Power Graph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #101025;
+      color: white;
+      font-family: Arial;
+      padding: 20px;
+    }
+    h1 { color: #00e5ff; }
+    .card {
+      background: #20203d;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+    input { width: 100%; }
+    canvas { width: 100%; }
+    a { color: #00e5ff; }
+  </style>
+</head>
+<body>
+
+<h1>Power Generation Graph</h1>
+<p>Hydroelectric generation simulation</p>
+
+<div class="card">
+  <h3>Water Flow: <span id="flowValue">50</span>%</h3>
+  <input type="range" id="flow" min="0" max="100" value="50">
+
+  <h3>Simulated Voltage: <span id="voltage">6.0</span> V</h3>
+  <h3>Simulated Power: <span id="power">3.0</span> W</h3>
+</div>
+
+<div class="card">
+  <h3>Voltage vs Water Flow</h3>
+  <canvas id="graph" width="600" height="300"></canvas>
+</div>
+
+<p><a href="index.html">Back to Home</a></p>
+
+<script>
+const flow = document.getElementById("flow");
+const canvas = document.getElementById("graph");
+const ctx = canvas.getContext("2d");
+
+function update() {
+  let f = Number(flow.value);
+  let voltage = f * 0.12;
+  let power = voltage * 0.5;
+
+  document.getElementById("flowValue").textContent = f;
+  document.getElementById("voltage").textContent =
+    voltage.toFixed(1);
+  document.getElementById("power").textContent =
+    power.toFixed(1);
+
+  ctx.clearRect(0, 0, 600, 300);
+
+  ctx.strokeStyle = "#555577";
+  ctx.lineWidth = 1;
+
+  for (let i = 0; i <= 5; i++) {
+    let y = 250 - i * 45;
+    ctx.beginPath();
+    ctx.moveTo(50, y);
+    ctx.lineTo(570, y);
+    ctx.stroke();
+  }
+
+  ctx.fillStyle = "white";
+  ctx.font = "13px Arial";
+  ctx.fillText("Voltage (V)", 10, 20);
+  ctx.fillText("Water Flow (%)", 450, 285);
+
+  ctx.strokeStyle = "#00e5ff";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+
+  for (let x = 0; x <= 100; x++) {
+    let y = 250 - (x * 0.12 / 12) * 225;
+    if (x === 0) ctx.moveTo(50 + x * 5, y);
+    else ctx.lineTo(50 + x * 5, y);
+  }
+
+  ctx.stroke();
+
+  ctx.fillStyle = "#ffcc00";
+  ctx.beginPath();
+  ctx.arc(50 + f * 5, 250 - (voltage / 12) * 225,
+          6, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+flow.addEventListener("input", update);
+update();
+</script>
+
+</body>
+</html>
