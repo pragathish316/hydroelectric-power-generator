@@ -33,6 +33,33 @@
     color: #35d9ff;
     font-weight: bold;
 }
+    .meter {
+    background: #111c35;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+}
+
+.meter-track {
+    height: 16px;
+    background: #34445f;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.meter-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #168cff, #35d9ff);
+    border-radius: 20px;
+    transition: width 0.3s;
+}
+
+.meter-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
 
     <style>
         body {
@@ -195,6 +222,27 @@
     <h2>Live Simulation Readings</h2>
 
     <div class="readings">
+        <h2>Electrical Output Meters</h2>
+
+<div class="meter">
+    <div class="meter-label">
+        <strong>Voltage</strong>
+        <span id="voltageMeterText">6.00 V</span>
+    </div>
+    <div class="meter-track">
+        <div class="meter-fill" id="voltageMeter"></div>
+    </div>
+</div>
+
+<div class="meter">
+    <div class="meter-label">
+        <strong>Power</strong>
+        <span id="powerMeterText">1.50 W</span>
+    </div>
+    <div class="meter-track">
+        <div class="meter-fill" id="powerMeter"></div>
+    </div>
+</div>
 
         <div class="reading">
             <h3>Water Flow</h3>
@@ -316,6 +364,17 @@ document.getElementById("waterStatus").textContent =
 
     document.getElementById("power").textContent =
         power.toFixed(2);
+    document.getElementById("voltageMeter").style.width =
+    (voltage / 12 * 100) + "%";
+
+document.getElementById("voltageMeterText").textContent =
+    voltage.toFixed(2) + " V";
+
+document.getElementById("powerMeter").style.width =
+    (power / 6 * 100) + "%";
+
+document.getElementById("powerMeterText").textContent =
+    power.toFixed(2) + " W";
 
     document.getElementById("energy").textContent =
         energy.toFixed(4);
